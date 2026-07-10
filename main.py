@@ -76,12 +76,27 @@ plt.figure(figsize=(15,5))
 
 plt.figure(figsize=(16,6))
 
+df_plot = df.copy()
+
+gaps = (
+    df_plot["Timestamp"].diff()
+    > pd.Timedelta(minutes=10)
+)
+
+df_plot.loc[gaps, "Glucose"] = None
+
+print("Maximum gap:",
+      df["Timestamp"].diff().max())
+
+print("Number of large gaps:",
+      gaps.sum())
+
 # Plot only the first 500 readings
-sample = df.iloc[:500]
+sample_plot = df_plot.iloc[:500]
 
 plt.plot(
-    sample["Timestamp"],
-    sample["Glucose"],
+    sample_plot["Timestamp"],
+    sample_plot["Glucose"],
     color="blue",
     linewidth=2
 )
@@ -126,3 +141,7 @@ print(f"Time Below Range : {tbr:.2f}%")
 print(f"Standard Deviation : {std:.2f}")
 print(f"Coefficient of Variation : {cv:.2f}%")
 print(f"Estimated GMI : {gmi:.2f}%")
+
+df["TimeDiff"] = df["Timestamp"].diff()
+
+print(df["TimeDiff"].max())
