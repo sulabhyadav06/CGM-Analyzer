@@ -268,9 +268,154 @@ with open(
 
     print("Report saved successfully!")
 
-for child in root:
-    print(child.tag)
+#version 3 , meal analysis
+
+#meal dataframe
+meal_times = []
+meal_types = []
+meal_carbs = []
 
 for meal in root.find("meal"):
-    print(meal.attrib)
+
+    meal_times.append(
+        meal.attrib["ts"]
+    )
+
+    meal_types.append(
+        meal.attrib["type"]
+    )
+
+    meal_carbs.append(
+        int(meal.attrib["carbs"])
+    )
+
+    meal_df = pd.DataFrame({
+    "Timestamp": meal_times,
+    "Meal Type": meal_types,
+    "Carbs": meal_carbs
+})
+    
+    meal_df["Timestamp"] = pd.to_datetime(
+    meal_df["Timestamp"],
+    format="%d-%m-%Y %H:%M:%S"
+)
+    
+print("\nMeal Statistics")
+
+print(
+    "Total Meals:",
+    len(meal_df)
+)
+
+print(
+    "Average Carbs:",
+    meal_df["Carbs"].mean()
+)
+
+#Meal type distribution
+
+print(
+    meal_df["Meal Type"]
+    .value_counts()
+)
+
+#Daily carb intake
+
+meal_df["Date"] = (
+    meal_df["Timestamp"]
+    .dt.date
+)
+
+daily_carbs = (
+    meal_df
+    .groupby("Date")
+    ["Carbs"]
+    .sum()
+)
+
+print("\nDaily Carbohydrate Intake")
+print(daily_carbs)
+
+#Visualisation
+
+plt.figure(figsize=(12,5))
+
+plt.plot(
+    daily_carbs.index,
+    daily_carbs.values,
+    marker="o"
+)
+
+plt.title(
+    "Daily Carbohydrate Intake"
+)
+
+plt.ylabel("Carbs (g)")
+
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+
+plt.savefig(
+    f"output/carbs_{patient_id}.png"
+)
+
+plt.show()
+
+#post meal glucose rise
+
+meal_spikes = []
+for _, meal in meal_df.iterrows():
+
+    meal_time = meal["Timestamp"]
+
+    future = df[
+        (df["Timestamp"] >= meal_time)
+        &
+        (
+            df["Timestamp"]
+            <= meal_time
+            + pd.Timedelta(hours=2)
+        )
+    ]
+
+    if len(future) == 0:
+        meal_spikes.append(None)
+        continue
+
+    start = future.iloc[0]["Glucose"]
+
+    peak = future["Glucose"].max()
+
+    rise = peak - start
+
+    meal_spikes.append(rise)
+    
+#print(len(meal_df))
+#print(len(meal_spikes))
+
+meal_df["Spike"] = meal_spikes
+
+print(
+    meal_df[
+        ["Meal Type",
+         "Carbs",
+         "Spike"]
+    ]
+)
+
+#correlation
+
+corr = (
+    meal_df["Carbs"]
+    .corr(
+        meal_df["Spike"]
+    )
+)
+
+print(
+    "Carbs-Spike Correlation:",
+    corr
+)
+
     
