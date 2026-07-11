@@ -145,3 +145,27 @@ print(f"Estimated GMI : {gmi:.2f}%")
 df["TimeDiff"] = df["Timestamp"].diff()
 
 print(df["TimeDiff"].max())
+
+df["Date"] = df["Timestamp"].dt.date
+
+daily_stats = (
+    df.groupby("Date")["Glucose"]
+    .agg(["mean", "max", "min"])
+)
+
+print(daily_stats)
+
+with open("output/report.txt", "w") as f:
+    f.write("CGM ANALYSIS REPORT\n")
+    f.write("="*40 + "\n")
+    f.write(f"Average Glucose: {average:.2f}\n")
+    f.write(f"Maximum Glucose: {maximum}\n")
+    f.write(f"Minimum Glucose: {minimum}\n")
+    f.write(f"Time In Range: {tir:.2f}%\n")
+    f.write(f"Time Above Range: {tar:.2f}%\n")
+    f.write(f"Time Below Range: {tbr:.2f}%\n")
+    f.write(f"Standard Deviation: {std:.2f}\n")
+    f.write(f"Coefficient of Variation: {cv:.2f}%\n")
+    f.write(f"GMI: {gmi:.2f}%\n")
+
+    print("Report saved successfully!")
