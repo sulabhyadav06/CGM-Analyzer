@@ -1,14 +1,29 @@
 print("start")
+
+
 import xml.etree.ElementTree as ET
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
+filename = input(
+    "Enter XML filename: "
+)
+patient_id = filename.replace(".xml", "")
+
+print("\nAvailable Files:\n")
+
+for file in os.listdir("data"):
+    if file.endswith(".xml"):
+        print(file)
+
 # -------------------------
 # Load XML File
 # -------------------------
 
-tree = ET.parse("data/559-ws-training.xml")
+tree = ET.parse(
+    f"data/{filename}"
+)
 root = tree.getroot()
 
 timestamps = []
@@ -125,7 +140,9 @@ plt.tight_layout()
 
 os.makedirs("output", exist_ok=True)
 
-plt.savefig("output/glucose_plot.png")
+plt.savefig(
+    f"output/glucose_plot_{patient_id}.png"
+)
 
 plt.show()
 
@@ -146,7 +163,7 @@ plt.ylabel("Frequency")
 plt.title("Glucose Distribution")
 
 plt.savefig(
-    "output/glucose_histogram.png"
+    f"output/glucose_histogram_{patient_id}.png"
 )
 
 plt.show()
@@ -173,7 +190,9 @@ plt.pie(
 
 plt.title("Time in Different Glucose Ranges")
 
-plt.savefig("output/tir_pie.png")
+plt.savefig(
+    f"output/tir_pie_{patient_id}.png"
+)
 
 plt.show()
 
@@ -202,7 +221,7 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 
 plt.savefig(
-    "output/daily_average.png"
+    f"output/daily_average_{patient_id}.png"
 )
 
 plt.show()
@@ -231,7 +250,10 @@ daily_stats = (
 
 print(daily_stats)
 
-with open("output/report.txt", "w") as f:
+with open(
+    f"output/report_{patient_id}.txt",
+    "w"
+) as f:
     f.write("CGM ANALYSIS REPORT\n")
     f.write("="*40 + "\n")
     f.write(f"Average Glucose: {average:.2f}\n")
@@ -246,3 +268,9 @@ with open("output/report.txt", "w") as f:
 
     print("Report saved successfully!")
 
+for child in root:
+    print(child.tag)
+
+for meal in root.find("meal"):
+    print(meal.attrib)
+    

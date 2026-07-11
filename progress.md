@@ -2,7 +2,7 @@
 
 ---
 
-# Version 1.0 ✅
+# Version 1.0 
 Date: 10 July 2026
 
 ## Objective
@@ -93,7 +93,7 @@ Results:
 - Maximum missing gap: 13 hours 3 minutes
 - Number of large gaps: X
 
-# Version 1.2 ✅
+# Version 1.2 
 Date: 10 July 2026
 
 ### Daily Statistics Added
@@ -130,7 +130,7 @@ Learned:
 
 ---
 
-# Version 2.0 🚧 (In Progress)
+# Version 2.0 (In Progress)
 
 ### Advanced Visualizations Added
 
@@ -152,7 +152,7 @@ Displays:
 
 ---
 
-# Version 2.1 ⏳ Planned
+# Version 2.1  Planned
 
 ### Multi-Patient Support
 
@@ -182,3 +182,22 @@ Goals:
 - Streamlit Web App
 - Patient comparison dashboard
 - Deployment
+
+# Version 2.1
+
+## Added
+- Multi-patient support
+- User can select XML file at runtime
+- Patient-specific reports
+- Patient-specific plots
+- Automatic file listing
+
+## Output Example
+report_559-ws-training.txt
+report_591-ws-training.txt
+glucose_plot_559-ws-training.png
+glucose_plot_591-ws-training.png
+tir_pie_559-ws-training.png
+tir_pie_591-ws-training.png
+
+Status: Completed 

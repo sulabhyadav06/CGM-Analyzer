@@ -1,0 +1,11 @@
+CGM ANALYSIS REPORT
+========================================
+Average Glucose: 156.02
+Maximum Glucose: 397
+Minimum Glucose: 40
+Time In Range: 64.20%
+Time Above Range: 32.10%
+Time Below Range: 3.70%
+Standard Deviation: 58.04
+Coefficient of Variation: 37.20%
+GMI: 7.04%
