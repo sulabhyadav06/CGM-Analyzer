@@ -92,3 +92,93 @@ Added:
 Results:
 - Maximum missing gap: 13 hours 3 minutes
 - Number of large gaps: X
+
+# Version 1.2 ✅
+Date: 10 July 2026
+
+### Daily Statistics Added
+
+For every day:
+
+- Daily average glucose
+- Daily maximum glucose
+- Daily minimum glucose
+
+### Report Generation
+
+Automatically saves results into:
+
+output/report.txt
+
+### Example Report
+
+- Average glucose
+- Time in Range
+- TAR
+- TBR
+- SD
+- CV
+- GMI
+- Daily statistics
+
+### Notes
+Learned:
+
+- Grouping data by date
+- Exporting results to text files
+- Building reusable reports
+
+---
+
+# Version 2.0 🚧 (In Progress)
+
+### Advanced Visualizations Added
+
+✅ Glucose Histogram
+
+Shows glucose distribution.
+
+✅ Time in Different Glucose Ranges Pie Chart
+
+Displays:
+
+- Below Range
+- In Range
+- Above Range
+
+### Remaining Tasks
+
+⬜ Daily Average Trend Graph
+
+---
+
+# Version 2.1 ⏳ Planned
+
+### Multi-Patient Support
+
+Goals:
+
+- Allow user to select any patient XML file
+- Remove hardcoded filename
+- Analyze multiple patients automatically
+- Compare different patients
+
+---
+
+# Future Roadmap
+
+## Version 3.0
+- Meal analysis
+- Insulin analysis
+- Activity analysis
+
+## Version 4.0
+- Hypoglycemia prediction
+- Hyperglycemia prediction
+- Machine Learning models
+
+## Version 5.0
+- Interactive Dashboard
+- Streamlit Web App
+- Patient comparison dashboard
+- Deployment

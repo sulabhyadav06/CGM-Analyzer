@@ -72,8 +72,6 @@ print(f"Hyperglycemia : {hyper}")
 # Plot
 # -------------------------
 
-plt.figure(figsize=(15,5))
-
 plt.figure(figsize=(16,6))
 
 df_plot = df.copy()
@@ -130,6 +128,84 @@ os.makedirs("output", exist_ok=True)
 plt.savefig("output/glucose_plot.png")
 
 plt.show()
+
+plt.figure(figsize=(8,5))
+
+plt.hist(
+    df["Glucose"],
+    bins=30
+)
+
+plt.axvline(70, linestyle="--")
+
+plt.axvline(180, linestyle="--")
+
+plt.xlabel("Glucose (mg/dL)")
+plt.ylabel("Frequency")
+
+plt.title("Glucose Distribution")
+
+plt.savefig(
+    "output/glucose_histogram.png"
+)
+
+plt.show()
+
+tbr = (df["Glucose"] < 70).mean() * 100
+
+tar = (df["Glucose"] > 180).mean() * 100
+
+labels = [
+    "Below Range (<70)",
+    "In Range (70-180)",
+    "Above Range (>180)"
+]
+
+sizes = [tbr, tir, tar]
+
+plt.figure(figsize=(7,7))
+
+plt.pie(
+    sizes,
+    labels=labels,
+    autopct="%1.1f%%"
+)
+
+plt.title("Time in Different Glucose Ranges")
+
+plt.savefig("output/tir_pie.png")
+
+plt.show()
+
+df["Date"] = df["Timestamp"].dt.date
+
+daily_avg = (
+    df.groupby("Date")["Glucose"]
+    .mean()
+)
+
+plt.figure(figsize=(12,5))
+
+plt.plot(
+    daily_avg.index,
+    daily_avg.values,
+    marker="o"
+)
+
+plt.title("Daily Average Glucose")
+
+plt.xlabel("Date")
+plt.ylabel("Average Glucose (mg/dL)")
+
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+
+plt.savefig(
+    "output/daily_average.png"
+)
+
+plt.show()
 tar = (df["Glucose"] > 180).mean()*100
 tbr = (df["Glucose"] < 70).mean()*100
 std = df["Glucose"].std()
@@ -169,3 +245,4 @@ with open("output/report.txt", "w") as f:
     f.write(f"GMI: {gmi:.2f}%\n")
 
     print("Report saved successfully!")
+
