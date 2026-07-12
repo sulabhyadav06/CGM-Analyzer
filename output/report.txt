@@ -1,0 +1,49 @@
+CGM ANALYSIS REPORT
+========================================
+
+Source File : 591-ws-training.xml
+Patient ID : 591-ws-training
+Generated On : 2026-07-12 16:23:48.449865
+
+GENERAL STATISTICS
+-------------------------
+Average Glucose : 156.02 mg/dL
+Maximum Glucose : 397 mg/dL
+Minimum Glucose : 40 mg/dL
+
+TIME IN RANGES
+-------------------------
+Time In Range (70-180) : 64.20%
+Time Above Range : 32.10%
+Time Below Range : 3.70%
+
+Standard Deviation : 58.04 mg/dL
+Coefficient of Variation : 37.20%
+Estimated GMI : 7.04%
+
+EVENT COUNTS
+-------------------------
+Hypoglycemia Events : 401
+Hyperglycemia Events : 3482
+
+DATA QUALITY
+-------------------------
+Maximum Gap : 3 days 08:38:00
+Number of Large Gaps : 25
+
+MEAL ANALYSIS
+-------------------------
+Total Meals : 212
+Average Carbs : 31.12 g
+Carb-Spike Correlation : -0.107
+
+PREDICTION RESULTS
+-------------------------
+5 min MAE : 5.03 mg/dL
+30 min MAE : 25.68 mg/dL
+60 min MAE : 35.00 mg/dL
+
+INTERPRETATION
+-------------------------
+Moderate glucose control.
+Prediction error increases with longer prediction horizons.

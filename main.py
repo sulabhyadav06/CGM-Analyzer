@@ -494,3 +494,209 @@ plt.savefig(
 )
 
 plt.show()
+
+#version 4.1
+#1 create future targets
+df["target_30"] = df["Glucose"].shift(-6)
+
+df["target_60"] = df["Glucose"].shift(-12)
+
+#2 create clean datasets
+df30 = df.dropna()
+
+df60 = df.dropna()
+
+#3 30 min prediction
+X30 = df30[
+    ["lag1","lag2","lag3"]
+]
+
+y30 = df30["target_30"]
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X30,
+    y30,
+    test_size=0.2,
+    shuffle=False
+)
+
+model30 = LinearRegression()
+
+model30.fit(
+    X_train,
+    y_train
+)
+
+pred30 = model30.predict(X_test)
+
+mae30 = mean_absolute_error(
+    y_test,
+    pred30
+)
+
+print(
+    "\n30 min MAE:",
+    round(mae30,2)
+)
+
+#4 60 min prediction
+X60 = df60[
+    ["lag1","lag2","lag3"]
+]
+
+y60 = df60["target_60"]
+
+model60 = LinearRegression()
+
+X_train60, X_test60, y_train60, y_test60 = train_test_split(
+    X60,
+    y60,
+    test_size=0.2,
+    shuffle=False
+)
+
+model60.fit(
+    X_train60,
+    y_train60
+)
+
+pred60 = model60.predict(
+    X_test60
+)
+
+mae60 = mean_absolute_error(
+    y_test60,
+    pred60
+)
+
+print(
+    "\n60 min MAE:",
+    round(mae60,2)
+)
+
+#5 compare all models
+print("\nPrediction Summary")
+
+print("5 min MAE :", round(mae,2))
+
+print("30 min MAE:", round(mae30,2))
+
+print("60 min MAE:", round(mae60,2))
+
+#6 plot all predictions
+plt.figure(figsize=(12,5))
+
+plt.plot(
+    y_test.values[:300],
+    label="Actual"
+)
+
+plt.plot(
+    pred30[:300],
+    label="30min Prediction"
+)
+
+plt.legend()
+
+plt.title(
+    "30 Minute Prediction"
+)
+
+plt.savefig(
+    "output/prediction_30.png"
+)
+
+plt.show()
+
+plt.figure(figsize=(12,5))
+
+plt.plot(
+    y_test60.values[:300],
+    label="Actual"
+)
+
+plt.plot(
+    pred60[:300],
+    label="60min Prediction"
+)
+
+plt.legend()
+
+plt.title(
+    "60 Minute Prediction"
+)
+
+plt.savefig(
+    "output/prediction_60.png"
+)
+
+plt.show()
+
+#DETAILED REPORT
+with open("output/report.txt", "w") as f:
+
+    f.write("CGM ANALYSIS REPORT\n")
+    f.write("=" * 40 + "\n\n")
+
+    f.write(f"Source File : {filename}\n")
+    f.write(f"Patient ID : {filename.split('.')[0]}\n")
+    f.write(f"Generated On : {pd.Timestamp.now()}\n\n")
+
+    # General Statistics
+    f.write("GENERAL STATISTICS\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Average Glucose : {average:.2f} mg/dL\n")
+    f.write(f"Maximum Glucose : {maximum} mg/dL\n")
+    f.write(f"Minimum Glucose : {minimum} mg/dL\n\n")
+
+    # Time in Range
+    f.write("TIME IN RANGES\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Time In Range (70-180) : {tir:.2f}%\n")
+    f.write(f"Time Above Range : {tar:.2f}%\n")
+    f.write(f"Time Below Range : {tbr:.2f}%\n\n")
+    f.write(f"Standard Deviation : {std:.2f} mg/dL\n")
+    f.write(f"Coefficient of Variation : {cv:.2f}%\n")
+    f.write(f"Estimated GMI : {gmi:.2f}%\n\n")
+    # Events
+    f.write("EVENT COUNTS\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Hypoglycemia Events : {hypo}\n")
+    f.write(f"Hyperglycemia Events : {hyper}\n\n")
+
+    # Data Quality
+    f.write("DATA QUALITY\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Maximum Gap : {df['Timestamp'].diff().max()}\n")
+    f.write(f"Number of Large Gaps : {gaps.sum()}\n\n")
+
+    # Meal Statistics
+    f.write("MEAL ANALYSIS\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Total Meals : {len(meal_df)}\n")
+    f.write(f"Average Carbs : {meal_df['Carbs'].mean():.2f} g\n")
+    f.write(f"Carb-Spike Correlation : {corr:.3f}\n\n")
+
+    # Prediction Results
+    f.write("PREDICTION RESULTS\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"5 min MAE : {mae:.2f} mg/dL\n")
+    f.write(f"30 min MAE : {mae30:.2f} mg/dL\n")
+    f.write(f"60 min MAE : {mae60:.2f} mg/dL\n\n")
+
+    # Interpretation
+    f.write("INTERPRETATION\n")
+    f.write("-" * 25 + "\n")
+
+    if tir >= 70:
+        f.write("Excellent glucose control.\n")
+    elif tir >= 50:
+        f.write("Moderate glucose control.\n")
+    else:
+        f.write("Poor glucose control.\n")
+
+    f.write(
+        "Prediction error increases with longer prediction horizons.\n"
+    )
+
+print("Report saved successfully!")
