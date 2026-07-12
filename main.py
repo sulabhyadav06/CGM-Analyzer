@@ -418,4 +418,79 @@ print(
     corr
 )
 
-    
+#version 4
+# 1 create lag features
+
+df["lag1"] = df["Glucose"].shift(1)
+df["lag2"] = df["Glucose"].shift(2)
+df["lag3"] = df["Glucose"].shift(3)
+
+df_ml = df.dropna()
+
+#import
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_absolute_error
+
+#3 create x and y
+X = df_ml[
+    ["lag1","lag2","lag3"]
+]
+
+y = df_ml["Glucose"]
+
+#4 split data
+X_train, X_test, y_train, y_test = train_test_split(
+    X,
+    y,
+    test_size=0.2,
+    shuffle=False
+)
+
+#5 train model
+model = LinearRegression()
+
+model.fit(
+    X_train,
+    y_train
+)
+
+#6 predict
+pred = model.predict(X_test)
+
+#7 evaluate
+mae = mean_absolute_error(
+    y_test,
+    pred
+)
+
+print(
+    "\nPrediction MAE:",
+    round(mae,2),
+    "mg/dL"
+)
+
+#8 plot predictions vs actual
+plt.figure(figsize=(12,5))
+
+plt.plot(
+    y_test.values[:300],
+    label="Actual"
+)
+
+plt.plot(
+    pred[:300],
+    label="Predicted"
+)
+
+plt.legend()
+
+plt.title(
+    "Glucose Prediction"
+)
+
+plt.savefig(
+    "output/prediction.png"
+)
+
+plt.show()

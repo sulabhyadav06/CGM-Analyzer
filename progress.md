@@ -201,3 +201,22 @@ tir_pie_559-ws-training.png
 tir_pie_591-ws-training.png
 
 Status: Completed 
+
+# Version 3.0
+
+Added:
+
+- Meal extraction
+- Meal DataFrame
+- Daily carbohydrate statistics
+- Meal type statistics
+- Daily carbohydrate visualization
+- Post-meal glucose spike analysis
+- Carbohydrate-spike correlation
+
+## Version 4.0
+✅ Created lag features
+✅ Trained first ML model
+✅ Predicted future glucose
+✅ Calculated MAE
+✅ Generated prediction plots
