@@ -672,6 +672,7 @@ X_train, X_test, y_train, y_test = (
 from sklearn.ensemble import RandomForestClassifier
 clf = RandomForestClassifier(
     n_estimators=200,
+    class_weight="balanced",
     random_state=42
 )
 
@@ -821,6 +822,11 @@ with open("output/report.txt", "w") as f:
     f.write(f"Recall : {recall_score(y_test,pred):.3f}\n")
     f.write(f"Precision : {precision_score(y_test,pred):.3f}\n")
     f.write(f"F1 Score : {f1_score(y_test,pred):.3f}\n")
+    f.write("\nVERSION 5.2\n")
+    f.write("----------------------\n")
+    f.write("Class Weight : balanced\n")
+    f.write(f"Recall : "
+    f"{recall_score(y_test,pred):.3f}\n")
 
 print("Report saved successfully!")
 

@@ -255,3 +255,17 @@ F1 Score: 0.18
 Observation:
 Overall accuracy improved slightly but hypoglycemia recall remained low due to severe class imbalance.
 
+# Version 5.2
+
+Goal:
+Handle severe class imbalance in hypoglycemia prediction.
+
+Changes:
+- Added class_weight="balanced"
+- Printed class distribution.
+- Compared recall with previous version.
+
+Outcome:
+Potential reduction in overall accuracy
+Hyperparameter balancing alone did not improve minority detection.
+

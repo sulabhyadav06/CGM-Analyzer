@@ -6,7 +6,7 @@ CGM ANALYSIS REPORT
 
 Source File : 591-ws-training.xml
 Patient ID : 591-ws-training
-Generated On : 2026-07-12 18:04:18.728845
+Generated On : 2026-07-12 18:53:17.527110
 
 GENERAL STATISTICS
 -------------------------
@@ -50,7 +50,12 @@ Prediction error increases with longer prediction horizons.
 
 HYPOGLYCEMIA WARNING MODEL
 --------------------------
-Accuracy : 0.961
+Accuracy : 0.960
 Recall : 0.164
-Precision : 0.191
-F1 Score : 0.176
+Precision : 0.180
+F1 Score : 0.171
+
+VERSION 5.2
+----------------------
+Class Weight : balanced
+Recall : 0.164
