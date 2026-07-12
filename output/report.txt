@@ -3,7 +3,7 @@ CGM ANALYSIS REPORT
 
 Source File : 591-ws-training.xml
 Patient ID : 591-ws-training
-Generated On : 2026-07-12 16:23:48.449865
+Generated On : 2026-07-12 16:59:54.679296
 
 GENERAL STATISTICS
 -------------------------

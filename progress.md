@@ -215,8 +215,27 @@ Added:
 - Carbohydrate-spike correlation
 
 ## Version 4.0
-✅ Created lag features
-✅ Trained first ML model
-✅ Predicted future glucose
-✅ Calculated MAE
-✅ Generated prediction plots
+Created lag features
+Trained first ML model
+Predicted future glucose
+Calculated MAE
+Generated prediction plots
+
+## Version 4.1
+
+ 30 minute prediction
+ 60 minute prediction
+ Multi-horizon forecasting
+ Compared prediction errors
+ Added new prediction plots
+
+ # Version 5.0
+
+Added:
+
+- Hypoglycemia warning system
+- Binary classification target
+- Random Forest classifier
+- Accuracy calculation
+- Confusion matrix
+- Precision / Recall / F1 metrics

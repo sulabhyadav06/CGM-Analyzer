@@ -700,3 +700,113 @@ with open("output/report.txt", "w") as f:
     )
 
 print("Report saved successfully!")
+
+#version 5
+#create target variable
+df["future_glucose"] = (
+    df["Glucose"]
+    .shift(-6)
+)
+df["Hypo_30"] = (
+    df["future_glucose"] < 70
+).astype(int)
+#2 features
+X = df[
+    [
+        "lag1",
+        "lag2",
+        "lag3"
+    ]
+]
+
+y = df["Hypo_30"]
+df_hypo = df.dropna()
+X = df_hypo[
+    ["lag1","lag2","lag3"]
+]
+
+y = df_hypo["Hypo_30"]
+
+#3 train/test split
+X_train, X_test, y_train, y_test = (
+    train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        shuffle=False
+    )
+)
+#4classification model
+from sklearn.ensemble import RandomForestClassifier
+clf = RandomForestClassifier(
+    n_estimators=100,
+    random_state=42
+)
+
+clf.fit(
+    X_train,
+    y_train
+)
+#5 predictions
+pred = clf.predict(X_test)
+
+#6 evaluation
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    classification_report
+)
+acc = accuracy_score(
+    y_test,
+    pred
+)
+
+print(
+    "\nHypoglycemia Prediction Accuracy:",
+    round(acc*100,2),
+    "%"
+)
+
+print(
+    "\nConfusion Matrix"
+)
+
+print(
+    confusion_matrix(
+        y_test,
+        pred
+    )
+)
+#7 print
+print(
+    classification_report(
+        y_test,
+        pred
+    )
+)
+#8 visualisation
+import seaborn as sns
+
+cm = confusion_matrix(
+    y_test,
+    pred
+)
+
+plt.figure(figsize=(5,5))
+
+sns.heatmap(
+    cm,
+    annot=True,
+    fmt="d"
+)
+
+plt.title(
+    "Hypoglycemia Prediction"
+)
+
+plt.savefig(
+    "output/hypo_confusion.png"
+)
+
+plt.show()
+
