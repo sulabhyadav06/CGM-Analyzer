@@ -6,7 +6,7 @@ CGM ANALYSIS REPORT
 
 Source File : 591-ws-training.xml
 Patient ID : 591-ws-training
-Generated On : 2026-07-12 18:53:17.527110
+Generated On : 2026-07-12 22:30:10.321959
 
 GENERAL STATISTICS
 -------------------------
@@ -50,12 +50,37 @@ Prediction error increases with longer prediction horizons.
 
 HYPOGLYCEMIA WARNING MODEL
 --------------------------
-Accuracy : 0.960
-Recall : 0.164
-Precision : 0.180
-F1 Score : 0.171
+Accuracy : 0.900
+Recall : 0.764
+Precision : 0.171
+F1 Score : 0.279
 
 VERSION 5.2
 ----------------------
 Class Weight : balanced
-Recall : 0.164
+Recall : 0.764
+
+VERSION 5.3
+=========================
+Accuracy : 89.99 %
+Precision : 0.17
+Recall : 0.76
+F1 Score : 0.28
+
+Confusion Matrix
+----------------
+[[1908  204]
+ [  13   42]]
+
+Interpretation
+--------------
+Detected hypo events : 42
+Missed hypo events : 13
+False alarms : 204
+Detection Rate : 76.36%
+
+Key Findings
+------------
+Prediction error increases with longer prediction horizons.
+Carbohydrate intake alone shows weak correlation with glucose spikes.
+Hypoglycemia model successfully detects most low glucose events.

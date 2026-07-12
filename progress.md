@@ -269,3 +269,28 @@ Outcome:
 Potential reduction in overall accuracy
 Hyperparameter balancing alone did not improve minority detection.
 
+## Version 5.3 – Improved Hypoglycemia Prediction Model
+
+### Objective
+Improve the hypoglycemia warning system by reducing missed low-glucose events and improving recall.
+
+### Changes Made
+- Switched to Random Forest Classifier.
+- Applied SMOTE oversampling to handle severe class imbalance.
+- Tuned model parameters:
+  - n_estimators = 200
+  - max_depth = 12
+  - min_samples_leaf = 5
+  - class_weight = "balanced_subsample"
+  - k_neighbors = 3 for SMOTE
+
+### Final Results
+
+Accuracy: **89.99%**
+
+Confusion Matrix:
+
+```text
+[[1908 204]
+ [  13  42]]
+

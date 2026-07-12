@@ -430,7 +430,8 @@ df_ml = df.dropna()
 #import
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, recall_score
+from sklearn.metrics import mean_absolute_error
+from imblearn.over_sampling import SMOTE
 
 #3 create x and y
 X = df_ml[
@@ -449,7 +450,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 #5 train model
 model = LinearRegression()
-
 model.fit(
     X_train,
     y_train
@@ -672,9 +672,13 @@ X_train, X_test, y_train, y_test = (
 from sklearn.ensemble import RandomForestClassifier
 clf = RandomForestClassifier(
     n_estimators=200,
-    class_weight="balanced",
-    random_state=42
+    class_weight="balanced_subsample",
+    random_state=42,
+    max_depth=12,
+    min_samples_leaf=5
 )
+sm = SMOTE(random_state=42,k_neighbors=3)
+X_train, y_train = sm.fit_resample(X_train, y_train)
 
 clf.fit(
     X_train,
@@ -748,6 +752,37 @@ from sklearn.metrics import (
     precision_score,
     f1_score
 )
+
+df["delta1"] = df["lag1"] - df["lag2"]
+
+df["delta2"] = df["lag2"] - df["lag3"]
+
+df["rolling_mean"] = (
+    df[["lag1","lag2","lag3"]]
+    .mean(axis=1)
+)
+
+df["rolling_std"] = (
+    df[["lag1","lag2","lag3"]]
+    .std(axis=1)
+)
+
+df["minimum"] = (
+    df[["lag1","lag2","lag3"]]
+    .min(axis=1)
+)
+X = df[
+[
+    "lag1",
+    "lag2",
+    "lag3",
+    "delta1",
+    "delta2",
+    "rolling_mean",
+    "rolling_std",
+    "minimum"
+]
+]
 
 #DETAILED REPORT
 with open("output/report.txt", "w") as f:
@@ -828,5 +863,46 @@ with open("output/report.txt", "w") as f:
     f.write(f"Recall : "
     f"{recall_score(y_test,pred):.3f}\n")
 
+    f.write("\nVERSION 5.3\n")
+    f.write("=========================\n")
+    f.write(f"Accuracy : {acc*100:.2f} %\n")
+    f.write(f"Precision : "
+    f"{precision_score(y_test, pred):.2f}\n")
+    f.write(f"Recall : "f"{recall_score(y_test, pred):.2f}\n")
+    f.write(f"F1 Score : "
+    f"{f1_score(y_test, pred):.2f}\n")
+    cm = confusion_matrix(y_test, pred)
+
+    f.write("\nConfusion Matrix\n")
+    f.write("----------------\n")
+    f.write(str(cm))
+    f.write("\n")
+
+# Interpretation
+    tn, fp, fn, tp = cm.ravel()
+
+    f.write("\nInterpretation\n")
+    f.write("--------------\n")
+    f.write(f"Detected hypo events : {tp}\n")
+    f.write(f"Missed hypo events : {fn}\n")
+    f.write(f"False alarms : {fp}\n")
+    f.write(f"Detection Rate : "
+    f"{tp/(tp+fn)*100:.2f}%\n")
+
+    # Final insights
+    f.write("\nKey Findings\n")
+    f.write("------------\n")
+
+    f.write("Prediction error increases with "
+    "longer prediction horizons.\n")
+
+    f.write("Carbohydrate intake alone shows "
+    "weak correlation with glucose spikes.\n")
+
+    f.write("Hypoglycemia model successfully "
+    "detects most low glucose events.\n")
+
 print("Report saved successfully!")
+
+
 
