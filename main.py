@@ -430,7 +430,7 @@ df_ml = df.dropna()
 #import
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error
+from sklearn.metrics import mean_absolute_error, recall_score
 
 #3 create x and y
 X = df_ml[
@@ -632,74 +632,6 @@ plt.savefig(
 
 plt.show()
 
-#DETAILED REPORT
-with open("output/report.txt", "w") as f:
-
-    f.write("CGM ANALYSIS REPORT\n")
-    f.write("=" * 40 + "\n\n")
-
-    f.write(f"Source File : {filename}\n")
-    f.write(f"Patient ID : {filename.split('.')[0]}\n")
-    f.write(f"Generated On : {pd.Timestamp.now()}\n\n")
-
-    # General Statistics
-    f.write("GENERAL STATISTICS\n")
-    f.write("-" * 25 + "\n")
-    f.write(f"Average Glucose : {average:.2f} mg/dL\n")
-    f.write(f"Maximum Glucose : {maximum} mg/dL\n")
-    f.write(f"Minimum Glucose : {minimum} mg/dL\n\n")
-
-    # Time in Range
-    f.write("TIME IN RANGES\n")
-    f.write("-" * 25 + "\n")
-    f.write(f"Time In Range (70-180) : {tir:.2f}%\n")
-    f.write(f"Time Above Range : {tar:.2f}%\n")
-    f.write(f"Time Below Range : {tbr:.2f}%\n\n")
-    f.write(f"Standard Deviation : {std:.2f} mg/dL\n")
-    f.write(f"Coefficient of Variation : {cv:.2f}%\n")
-    f.write(f"Estimated GMI : {gmi:.2f}%\n\n")
-    # Events
-    f.write("EVENT COUNTS\n")
-    f.write("-" * 25 + "\n")
-    f.write(f"Hypoglycemia Events : {hypo}\n")
-    f.write(f"Hyperglycemia Events : {hyper}\n\n")
-
-    # Data Quality
-    f.write("DATA QUALITY\n")
-    f.write("-" * 25 + "\n")
-    f.write(f"Maximum Gap : {df['Timestamp'].diff().max()}\n")
-    f.write(f"Number of Large Gaps : {gaps.sum()}\n\n")
-
-    # Meal Statistics
-    f.write("MEAL ANALYSIS\n")
-    f.write("-" * 25 + "\n")
-    f.write(f"Total Meals : {len(meal_df)}\n")
-    f.write(f"Average Carbs : {meal_df['Carbs'].mean():.2f} g\n")
-    f.write(f"Carb-Spike Correlation : {corr:.3f}\n\n")
-
-    # Prediction Results
-    f.write("PREDICTION RESULTS\n")
-    f.write("-" * 25 + "\n")
-    f.write(f"5 min MAE : {mae:.2f} mg/dL\n")
-    f.write(f"30 min MAE : {mae30:.2f} mg/dL\n")
-    f.write(f"60 min MAE : {mae60:.2f} mg/dL\n\n")
-
-    # Interpretation
-    f.write("INTERPRETATION\n")
-    f.write("-" * 25 + "\n")
-
-    if tir >= 70:
-        f.write("Excellent glucose control.\n")
-    elif tir >= 50:
-        f.write("Moderate glucose control.\n")
-    else:
-        f.write("Poor glucose control.\n")
-
-    f.write(
-        "Prediction error increases with longer prediction horizons.\n"
-    )
-
-print("Report saved successfully!")
 
 #version 5
 #create target variable
@@ -739,7 +671,7 @@ X_train, X_test, y_train, y_test = (
 #4classification model
 from sklearn.ensemble import RandomForestClassifier
 clf = RandomForestClassifier(
-    n_estimators=100,
+    n_estimators=200,
     random_state=42
 )
 
@@ -809,4 +741,86 @@ plt.savefig(
 )
 
 plt.show()
+
+from sklearn.metrics import (
+    recall_score,
+    precision_score,
+    f1_score
+)
+
+#DETAILED REPORT
+with open("output/report.txt", "w") as f:
+    f.write(f"Maximum Glucose : {maximum} mg/dL\n")
+    f.write(f"Minimum Glucose : {minimum} mg/dL\n\n")
+
+    f.write("CGM ANALYSIS REPORT\n")
+    f.write("=" * 40 + "\n\n")
+
+    f.write(f"Source File : {filename}\n")
+    f.write(f"Patient ID : {filename.split('.')[0]}\n")
+    f.write(f"Generated On : {pd.Timestamp.now()}\n\n")
+
+    # General Statistics
+    f.write("GENERAL STATISTICS\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Average Glucose : {average:.2f} mg/dL\n")
+
+    # Time in Range
+    f.write("TIME IN RANGES\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Time In Range (70-180) : {tir:.2f}%\n")
+    f.write(f"Time Above Range : {tar:.2f}%\n")
+    f.write(f"Time Below Range : {tbr:.2f}%\n\n")
+    f.write(f"Standard Deviation : {std:.2f} mg/dL\n")
+    f.write(f"Coefficient of Variation : {cv:.2f}%\n")
+    f.write(f"Estimated GMI : {gmi:.2f}%\n\n")
+    # Events
+    f.write("EVENT COUNTS\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Hypoglycemia Events : {hypo}\n")
+    f.write(f"Hyperglycemia Events : {hyper}\n\n")
+
+    # Data Quality
+    f.write("DATA QUALITY\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Maximum Gap : {df['Timestamp'].diff().max()}\n")
+    f.write(f"Number of Large Gaps : {gaps.sum()}\n\n")
+
+    # Meal Statistics
+    f.write("MEAL ANALYSIS\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"Total Meals : {len(meal_df)}\n")
+    f.write(f"Average Carbs : {meal_df['Carbs'].mean():.2f} g\n")
+    f.write(f"Carb-Spike Correlation : {corr:.3f}\n\n")
+
+    # Prediction Results
+    f.write("PREDICTION RESULTS\n")
+    f.write("-" * 25 + "\n")
+    f.write(f"5 min MAE : {mae:.2f} mg/dL\n")
+    f.write(f"30 min MAE : {mae30:.2f} mg/dL\n")
+    f.write(f"60 min MAE : {mae60:.2f} mg/dL\n\n")
+
+    # Interpretation
+    f.write("INTERPRETATION\n")
+    f.write("-" * 25 + "\n")
+
+    if tir >= 70:
+        f.write("Excellent glucose control.\n")
+    elif tir >= 50:
+        f.write("Moderate glucose control.\n")
+    else:
+        f.write("Poor glucose control.\n")
+
+    f.write(
+        "Prediction error increases with longer prediction horizons.\n"
+    )
+
+    f.write("\nHYPOGLYCEMIA WARNING MODEL\n")
+    f.write("--------------------------\n")
+    f.write(f"Accuracy : {acc:.3f}\n")
+    f.write(f"Recall : {recall_score(y_test,pred):.3f}\n")
+    f.write(f"Precision : {precision_score(y_test,pred):.3f}\n")
+    f.write(f"F1 Score : {f1_score(y_test,pred):.3f}\n")
+
+print("Report saved successfully!")
 

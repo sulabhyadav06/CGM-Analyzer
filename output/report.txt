@@ -1,16 +1,16 @@
+Maximum Glucose : 397 mg/dL
+Minimum Glucose : 40 mg/dL
+
 CGM ANALYSIS REPORT
 ========================================
 
 Source File : 591-ws-training.xml
 Patient ID : 591-ws-training
-Generated On : 2026-07-12 16:59:54.679296
+Generated On : 2026-07-12 18:04:18.728845
 
 GENERAL STATISTICS
 -------------------------
 Average Glucose : 156.02 mg/dL
-Maximum Glucose : 397 mg/dL
-Minimum Glucose : 40 mg/dL
-
 TIME IN RANGES
 -------------------------
 Time In Range (70-180) : 64.20%
@@ -47,3 +47,10 @@ INTERPRETATION
 -------------------------
 Moderate glucose control.
 Prediction error increases with longer prediction horizons.
+
+HYPOGLYCEMIA WARNING MODEL
+--------------------------
+Accuracy : 0.961
+Recall : 0.164
+Precision : 0.191
+F1 Score : 0.176

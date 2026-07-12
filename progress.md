@@ -239,3 +239,19 @@ Added:
 - Accuracy calculation
 - Confusion matrix
 - Precision / Recall / F1 metrics
+
+## Version 5.1 - Model Tuning
+
+Changes:
+- Increased Random Forest estimators from 100 → 200.
+- Reduced false positives from 45 → 38.
+
+Results:
+Accuracy: 96.12%
+Precision (Hypo): 0.19
+Recall (Hypo): 0.16
+F1 Score: 0.18
+
+Observation:
+Overall accuracy improved slightly but hypoglycemia recall remained low due to severe class imbalance.
+
