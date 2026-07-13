@@ -643,18 +643,54 @@ df["Hypo_30"] = (
     df["future_glucose"] < 70
 ).astype(int)
 #2 features
+df["delta1"] = df["Glucose"].diff(1)
+
+df["delta2"] = df["Glucose"].diff(2)
+
+df["rolling_mean"] = (
+    df["Glucose"]
+    .rolling(3)
+    .mean()
+)
+
+df["rolling_std"] = (
+    df["Glucose"]
+    .rolling(3)
+    .std()
+)
+
+df["minimum"] = (
+    df["Glucose"]
+    .rolling(3)
+    .min()
+)
+df=df.dropna()
 X = df[
+[
+    "lag1",
+    "lag2",
+    "lag3",
+    "delta1",
+    "delta2",
+    "rolling_mean",
+    "rolling_std",
+    "minimum"
+]
+]
+
+df_hypo = df.dropna()
+
+X = df_hypo[
     [
         "lag1",
         "lag2",
-        "lag3"
+        "lag3",
+        "delta1",
+        "delta2",
+        "rolling_mean",
+        "rolling_std",
+        "minimum"
     ]
-]
-
-y = df["Hypo_30"]
-df_hypo = df.dropna()
-X = df_hypo[
-    ["lag1","lag2","lag3"]
 ]
 
 y = df_hypo["Hypo_30"]
@@ -784,6 +820,84 @@ X = df[
 ]
 ]
 
+#version 6
+#1 daily risk score
+risk = (
+    (100 - tir) * 0.4
+    + tbr * 2
+    + cv * 0.5
+)
+if risk < 20:
+    status = "Low Risk"
+
+elif risk < 50:
+    status = "Moderate Risk"
+
+else:
+    status = "High Risk"
+
+print(
+    f"\nRisk Score: {risk:.2f}"
+)
+
+print(
+    f"Risk Category: {status}"
+)
+
+
+#2 glucose zone distribution plot
+labels = [
+    "Hypoglycemia",
+    "Target Range",
+    "Hyperglycemia"
+]
+
+sizes = [
+    tbr,
+    tir,
+    tar
+]
+
+plt.figure(figsize=(7,7))
+
+plt.pie(
+    sizes,
+    labels=labels,
+    autopct="%1.1f%%"
+)
+
+plt.title(
+    "Glucose Zone Distribution"
+)
+
+plt.savefig(
+    "output/risk_pie.png"
+)
+plt.show()
+
+#4 feature importance plot
+importance = clf.feature_importances_
+
+features = X.columns
+
+plt.barh(
+    features,
+    importance
+)
+plt.xlabel("Importance")
+
+plt.title(
+    "Feature Importance"
+)
+
+plt.tight_layout()
+
+plt.savefig(
+    "output/feature_importance.png"
+)
+plt.show()
+
+
 #DETAILED REPORT
 with open("output/report.txt", "w") as f:
     f.write(f"Maximum Glucose : {maximum} mg/dL\n")
@@ -852,18 +966,6 @@ with open("output/report.txt", "w") as f:
     )
 
     f.write("\nHYPOGLYCEMIA WARNING MODEL\n")
-    f.write("--------------------------\n")
-    f.write(f"Accuracy : {acc:.3f}\n")
-    f.write(f"Recall : {recall_score(y_test,pred):.3f}\n")
-    f.write(f"Precision : {precision_score(y_test,pred):.3f}\n")
-    f.write(f"F1 Score : {f1_score(y_test,pred):.3f}\n")
-    f.write("\nVERSION 5.2\n")
-    f.write("----------------------\n")
-    f.write("Class Weight : balanced\n")
-    f.write(f"Recall : "
-    f"{recall_score(y_test,pred):.3f}\n")
-
-    f.write("\nVERSION 5.3\n")
     f.write("=========================\n")
     f.write(f"Accuracy : {acc*100:.2f} %\n")
     f.write(f"Precision : "
@@ -878,7 +980,7 @@ with open("output/report.txt", "w") as f:
     f.write(str(cm))
     f.write("\n")
 
-# Interpretation
+    # Interpretation
     tn, fp, fn, tp = cm.ravel()
 
     f.write("\nInterpretation\n")
@@ -902,7 +1004,84 @@ with open("output/report.txt", "w") as f:
     f.write("Hypoglycemia model successfully "
     "detects most low glucose events.\n")
 
+    # ==========================
+    # RISK ASSESSMENT
+    # ==========================
+
+    f.write("\nRISK ASSESSMENT\n")
+    f.write("=========================\n")
+
+    f.write(
+    f"Daily Risk Score : "
+    f"{risk:.2f}\n"
+    )
+
+    f.write(
+    f"Risk Category : "
+    f"{status}\n"
+    )
+
+    f.write("\nInterpretation\n")
+    f.write("-------------------------\n")
+
+    if status == "Low Risk":
+
+     f.write(
+        "Patient demonstrates relatively "
+        "stable glucose control.\n"
+    )
+    
+    elif status == "Moderate Risk":
+
+     f.write(
+        "Patient shows moderate glycemic "
+        "variability and may benefit from "
+        "closer monitoring.\n"
+    )
+
+    else:
+     f.write(
+        "Patient exhibits high glucose "
+        "variability and elevated risk of "
+        "adverse glycemic events.\n"
+    )
+
+     f.write(
+    "Risk score incorporates time in range, "
+    "time below range, and glucose variability.\n"
+    )
+     f.write("\nCLINICAL RECOMMENDATIONS\n")
+     f.write("========================\n")
+
+    if status == "Low Risk":
+     f.write("- Continue current therapy.\n")
+
+    elif status == "Moderate Risk":
+     f.write("- Increase monitoring frequency.\n")
+     f.write("- Review insulin dosing patterns.\n")
+
+    else:
+     f.write("- Consider immediate clinical review.\n")
+     f.write("- Investigate recurrent hypoglycemia.\n")
+
+    confidence = recall_score(y_test, pred) * 100
+
+    f.write(
+    f"\nHypoglycemia Detection Confidence : "
+    f"{confidence:.2f}%\n"
+)
+
+    f.write(
+"\n====================================\n"
+"Report generated automatically by\n"
+"CGM Analyzer Version 6\n"
+"Author: Sulabh Yadav\n"
+"====================================\n"
+)
+
 print("Report saved successfully!")
+
+
 
 
 

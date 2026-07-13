@@ -290,7 +290,46 @@ Accuracy: **89.99%**
 
 Confusion Matrix:
 
-```text
 [[1908 204]
  [  13  42]]
+Version 6.0 – Risk Assessment System
 
+## 6.1 Risk Metrics
+
+ Time in Range (70–180 mg/dL) Time Below Range (<70 mg/dL)
+Time Above Range (>180 mg/dL)
+Coefficient of Variation
+
+---
+
+## 6.2 Risk Score Generation
+Implemented combined clinical risk score:
+
+Risk Score =
+(100 − TIR) × 0.4
++ TBR × 2
++ CV × 0.5
+
+Risk Categories:
+
+Low Risk
+Moderate Risk
+High Risk
+
+---
+
+## 6.3 Visualization
+Risk Pie Chart
+Feature Importance Plot
+Updated output folder structure
+
+---
+
+## 6.4 Automated Reporting
+ Added risk section to report.txt
+Added interpretation text
+Added clinical summary
+
+Project Status:
+
+Version 6 COMPLETE 

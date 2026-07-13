@@ -6,7 +6,7 @@ CGM ANALYSIS REPORT
 
 Source File : 591-ws-training.xml
 Patient ID : 591-ws-training
-Generated On : 2026-07-12 22:30:10.321959
+Generated On : 2026-07-13 21:10:19.070344
 
 GENERAL STATISTICS
 -------------------------
@@ -49,38 +49,45 @@ Moderate glucose control.
 Prediction error increases with longer prediction horizons.
 
 HYPOGLYCEMIA WARNING MODEL
---------------------------
-Accuracy : 0.900
-Recall : 0.764
-Precision : 0.171
-F1 Score : 0.279
-
-VERSION 5.2
-----------------------
-Class Weight : balanced
-Recall : 0.764
-
-VERSION 5.3
 =========================
-Accuracy : 89.99 %
-Precision : 0.17
-Recall : 0.76
-F1 Score : 0.28
+Accuracy : 89.52 %
+Precision : 0.16
+Recall : 0.73
+F1 Score : 0.26
 
 Confusion Matrix
 ----------------
-[[1908  204]
- [  13   42]]
+[[1900  212]
+ [  15   40]]
 
 Interpretation
 --------------
-Detected hypo events : 42
-Missed hypo events : 13
-False alarms : 204
-Detection Rate : 76.36%
+Detected hypo events : 40
+Missed hypo events : 15
+False alarms : 212
+Detection Rate : 72.73%
 
 Key Findings
 ------------
 Prediction error increases with longer prediction horizons.
 Carbohydrate intake alone shows weak correlation with glucose spikes.
 Hypoglycemia model successfully detects most low glucose events.
+
+RISK ASSESSMENT
+=========================
+Daily Risk Score : 40.31
+Risk Category : Moderate Risk
+
+Interpretation
+-------------------------
+Patient shows moderate glycemic variability and may benefit from closer monitoring.
+- Increase monitoring frequency.
+- Review insulin dosing patterns.
+
+Hypoglycemia Detection Confidence : 72.73%
+
+====================================
+Report generated automatically by
+CGM Analyzer Version 6
+Author: Sulabh Yadav
+====================================
